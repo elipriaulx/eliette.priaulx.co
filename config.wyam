@@ -1,7 +1,7 @@
 #recipe Blog
 
 // Customize your settings and add new ones here
-Settings[Keys.Host] = "eliette.priaulx.co
+Settings[Keys.Host] = "eliette.priaulx.co";
 Settings[BlogKeys.Title] = "Eliette Priaulx";
 Settings[BlogKeys.Description] = "Welcome!";
 
