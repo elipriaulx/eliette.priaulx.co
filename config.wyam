@@ -1,8 +1,43 @@
-#recipe Blog
+#n Wyam.Markdown
+#n Wyam.Yaml
+#n Wyam.Minification
 
-// Customize your settings and add new ones here
-Settings[Keys.Host] = "eliette.priaulx.co";
-Settings[BlogKeys.Title] = "Eliette Priaulx";
-Settings[BlogKeys.Description] = "Welcome!";
+System.Globalization.CultureInfo.DefaultThreadCurrentCulture
+    = System.Globalization.CultureInfo.CreateSpecificCulture("en-AU");
 
-// Add any pipeline customizations here
+Pipelines.Add("CSS",
+    ReadFiles("*.css"),
+    MinifyCss(),
+    WriteFiles(".css")
+);
+
+Pipelines.Add("JS",
+    ReadFiles("*.js"),
+    MinifyJs(),
+    WriteFiles(".js")
+);
+
+Pipelines.Add(
+    ReadFiles("index.md"),
+    FrontMatter(Yaml()),
+    Markdown(),
+    ReplaceIn("{{CONTENT}}", ReadFiles("bioFrame.html")),
+    Replace("{{NAME}}", @doc.Get("Name", "Joe Bloggs")),
+    Replace("{{BIO}}", @doc.Get("Bio", "Average Person")),
+    Replace("{{LOCATION}}", @doc.Get("Location", "Somewhere")),
+    Append(      
+        ReadFiles("externals/*.md"),
+        FrontMatter(Yaml()),
+        Markdown(),
+        ReplaceIn("{{CONTENT}}", ReadFiles("externals/template.html")),
+        Replace("{{TITLE}}", @doc.Get("Title", "")),
+        Replace("{{URI}}", @doc.Get("Uri", "about:blank")),
+        Replace("{{FAICON}}", @doc.Get("FaIcon", "fa-none")),
+        OrderBy(@doc.Get("Priority",0)),
+        Combine(),
+        ReplaceIn("{{CONTENT}}", ReadFiles("externalsFrame.html"))
+    ),
+    ReplaceIn("{{CONTENT}}", ReadFiles("index.html")),
+    Replace("{{TITLE}}", @doc.Get("Name", "Joe Bloggs")),
+    WriteFiles(".html")
+);
