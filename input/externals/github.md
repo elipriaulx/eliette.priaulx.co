@@ -1,5 +1,5 @@
 Title: Github
 Uri: https://github.com/elipriaulx
-Priority: 2
+Priority: 5
 FaIcon: fa-github
 ---
